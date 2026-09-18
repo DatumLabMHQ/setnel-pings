@@ -17,22 +17,26 @@ jobs:
     steps:
       - name: Trigger each dashboard's own detectors (setnel-ping)
         run: |
-          for url in \
-            "https://aave-dashboard-datum.vercel.app/api/setnel/cron" \
-            "https://sui-lending-datum.vercel.app/api/setnel/cron"; do
+          URLS=(
+            "https://aave-dashboard-datum.vercel.app/api/setnel/cron"
+            "https://sui-lending-datum.vercel.app/api/setnel/cron"
+          )
+          for url in "${URLS[@]}"; do
             code=$(curl -s -o /dev/null --max-time 90 -w "%{http_code}" "$url" || echo 000); echo "$code $url"
           done
       - name: Keep dashboard functions warm (monitor-warmup)
         run: |
-          for url in \
-            "https://aave-dashboard.vercel.app/api/health"  # Aave \
-            "https://datumlabs-centrifuge.vercel.app/api/health"  # Centrifuge RWA \
-            "https://sui-lending.vercel.app/api/health"  # Navi Lending \
-            "https://defi-tvl-dashboard.vercel.app/api/health"  # DeFi TVL Benchmark \
-            "https://liquidator-economy-dashboard.vercel.app/"  # Liquidator Economy \
-            "https://lending-intelligence-terminal.vercel.app/"  # Lending Intelligence Terminal \
-            "https://sparklend-dashboard.vercel.app/"  # Spark Lend \
-            "https://sui-lending.vercel.app/api/health"  # Sui Lending \
-            "https://www.duneuk.com/"  # DuneUK Terminal; do
+          # Enabled dashboards from setnel/config/dashboards.yaml, baseUrl + healthPath.
+          URLS=(
+            "https://aave-dashboard.vercel.app/api/health"
+            "https://datumlabs-centrifuge.vercel.app/api/health"
+            "https://sui-lending.vercel.app/api/health"
+            "https://defi-tvl-dashboard.vercel.app/api/health"
+            "https://liquidator-economy-dashboard.vercel.app/"
+            "https://lending-intelligence-terminal.vercel.app/"
+            "https://sparklend-dashboard.vercel.app/"
+            "https://www.duneuk.com/"
+          )
+          for url in "${URLS[@]}"; do
             code=$(curl -s -o /dev/null --max-time 30 -w "%{http_code}" "$url" || echo 000); echo "$code $url"
           done
