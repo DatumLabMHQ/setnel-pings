@@ -32,9 +32,9 @@ jobs:
             "https://datumlabs-centrifuge.vercel.app/api/health"
             "https://sui-lending.vercel.app/api/health"
             "https://defi-tvl-dashboard.vercel.app/api/health"
-            "https://liquidator-economy-dashboard-one.vercel.app/"
-            "https://lending-intelligence-terminal-dusky.vercel.app/lending-terminal"
-            "https://sparklend-dashboard-lac.vercel.app/sparklend/markets"
+            "https://liquidator-economy-dashboard.vercel.app/"
+            "https://lending-intelligence-terminal.vercel.app/"
+            "https://sparklend-dashboard.vercel.app/"
             "https://www.duneuk.com/"
           )
           for url in "${URLS[@]}"; do
