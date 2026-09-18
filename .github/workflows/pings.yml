@@ -1,0 +1,38 @@
+name: pings
+# Setnel's two five-minute heartbeats, moved out of the private setnel repo so they run on a public repo
+# (GitHub Actions is free for public repos; in setnel they cost ~17,000 minutes a month). No secrets: every
+# URL here is a public health or cron route. Keep the lists in step with setnel/config/dashboards.yaml and
+# setnel/.github/workflows/setnel-ping.yml.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+concurrency:
+  group: pings
+  cancel-in-progress: false
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Trigger each dashboard's own detectors (setnel-ping)
+        run: |
+          for url in \
+            "https://aave-dashboard-datum.vercel.app/api/setnel/cron" \
+            "https://sui-lending-datum.vercel.app/api/setnel/cron"; do
+            code=$(curl -s -o /dev/null --max-time 90 -w "%{http_code}" "$url" || echo 000); echo "$code $url"
+          done
+      - name: Keep dashboard functions warm (monitor-warmup)
+        run: |
+          for url in \
+            "https://aave-dashboard.vercel.app/api/health"  # Aave \
+            "https://datumlabs-centrifuge.vercel.app/api/health"  # Centrifuge RWA \
+            "https://sui-lending.vercel.app/api/health"  # Navi Lending \
+            "https://defi-tvl-dashboard.vercel.app/api/health"  # DeFi TVL Benchmark \
+            "https://liquidator-economy-dashboard.vercel.app/"  # Liquidator Economy \
+            "https://lending-intelligence-terminal.vercel.app/"  # Lending Intelligence Terminal \
+            "https://sparklend-dashboard.vercel.app/"  # Spark Lend \
+            "https://sui-lending.vercel.app/api/health"  # Sui Lending \
+            "https://www.duneuk.com/"  # DuneUK Terminal; do
+            code=$(curl -s -o /dev/null --max-time 30 -w "%{http_code}" "$url" || echo 000); echo "$code $url"
+          done
