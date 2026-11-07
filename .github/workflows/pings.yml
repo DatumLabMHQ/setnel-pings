@@ -18,8 +18,8 @@ jobs:
       - name: Trigger each dashboard's own detectors (setnel-ping)
         run: |
           URLS=(
-            "https://aave-dashboard-datum.vercel.app/api/setnel/cron"
-            "https://sui-lending-datum.vercel.app/api/setnel/cron"
+            "https://datumlabs-aavev3dashboard.datumlabs.workers.dev/api/setnel/cron"
+            "https://suilending.datumlabs.workers.dev/api/setnel/cron"
           )
           for url in "${URLS[@]}"; do
             code=$(curl -s -o /dev/null --max-time 90 -w "%{http_code}" "$url" || echo 000); echo "$code $url"
@@ -28,12 +28,12 @@ jobs:
         run: |
           # Enabled dashboards from setnel/config/dashboards.yaml, baseUrl + healthPath.
           URLS=(
-            "https://aave-dashboard.vercel.app/api/health"
-            "https://datumlabs-centrifuge.vercel.app/api/health"
-            "https://sui-lending.vercel.app/api/health"
+            "https://datumlabs-aavev3dashboard.datumlabs.workers.dev/api/health"
+            "https://centrifuge-rwa-dashboard.datumlabs.workers.dev/api/health"
+            "https://suilending.datumlabs.workers.dev/api/health"
             "https://defi-tvl-dashboard.vercel.app/api/health"
-            "https://liquidator-economy-dashboard.vercel.app/"
-            "https://lending-intelligence-terminal.vercel.app/"
+            "https://liquidator-economy-dashboard.datumlabs.workers.dev/"
+            "https://lending-intelligence-terminal.datumlabs.workers.dev/"
             "https://sparklend-dashboard.vercel.app/"
             "https://www.duneuk.com/"
           )
